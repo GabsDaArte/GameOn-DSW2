@@ -1,0 +1,14 @@
+{
+  "sessoes": [
+    {
+      "id": "1",
+      "titulo": "Ranked sem estresse",
+      "jogo": "Valorant",
+      "descricao": "Buscando time para subir elo com calma.",
+      "horario": "21:00",
+      "vagasTotais": 5,
+      "vagasOcupadas": 2
+    }
+  ],
+  "usuarios": []
+}

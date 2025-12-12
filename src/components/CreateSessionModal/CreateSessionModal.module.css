@@ -1,0 +1,145 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background-color: #1e1e1e;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid #333;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
+}
+
+.formGroup {
+  margin-bottom: 1.2rem;
+  position: relative; /* Importante para a lista flutuante se alinhar aqui */
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+
+/* Estilo unificado para inputs e selects */
+.input {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #121212;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  height: 50px;
+  color-scheme: dark;
+}
+
+.input:focus {
+  border-color: #8A2BE2;
+}
+
+/* --- NOVO: Lista de Sugestões (Autocomplete) --- */
+.suggestionsList {
+  position: absolute;
+  top: 100%; /* Cola logo abaixo do input */
+  left: 0;
+  right: 0;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.5);
+}
+
+.suggestionItem {
+  padding: 0.8rem;
+  cursor: pointer;
+  color: #ddd;
+  transition: background 0.2s;
+  border-bottom: 1px solid #333;
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+.suggestionItem:hover {
+  background-color: #8A2BE2;
+  color: white;
+}
+
+/* --- Row para Horário e Jogadores ficarem lado a lado --- */
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.row .formGroup {
+  flex: 1; /* Ocupam o mesmo tamanho */
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btnCancel {
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  border: 1px solid #333;
+  color: #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btnConfirm {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #8A2BE2 0%, #00BFFF 100%);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btnConfirm:hover { opacity: 0.9; }
+.btnCancel:hover { background-color: #333; }
+
