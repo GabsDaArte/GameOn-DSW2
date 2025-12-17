@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './CreateSessionModal.module.css';
 
 const ALL_GAMES = [
@@ -7,25 +7,39 @@ const ALL_GAMES = [
   "Call of Duty: Warzone", "Apex Legends", "The Witcher 3", "Elden Ring"
 ];
 
-function CreateSessionModal({ isOpen, onClose, onSave }) {
-  // 1. Estados para CADA campo do formulário
+function CreateSessionModal({ onClose, onSave, initialData }) {
   const [gameInput, setGameInput] = useState('');
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState('');
-  const [players, setPlayers] = useState('5'); // Começa com 5 por padrão
+  const [players, setPlayers] = useState('5');
+  const [description, setDescription] = useState('');
 
-  // Estados visuais
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredGames, setFilteredGames] = useState([]);
 
-  // Lógica da Data Mínima (que fizemos antes)
+  // Data mínima
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   const minDate = now.toISOString().slice(0, 16);
 
-  if (!isOpen) return null;
+  // Carrega dados iniciais ao abrir
+  useEffect(() => {
+      if (initialData) {
+          setGameInput(initialData.jogo || '');
+          setTitle(initialData.titulo || '');
+          setDateTime(initialData.data || '');
+          setPlayers(initialData.maxJogadores || '5');
+          setDescription(initialData.descricao || '');
+      } else {
+          // Valores padrão
+          setGameInput('');
+          setTitle('');
+          setDateTime('');
+          setPlayers('5');
+          setDescription('');
+      }
+  }, [initialData]);
 
-  // Lógica do Autocomplete de Jogos
   const handleGameChange = (e) => {
     const userInput = e.target.value;
     setGameInput(userInput);
@@ -41,44 +55,31 @@ function CreateSessionModal({ isOpen, onClose, onSave }) {
     setShowSuggestions(false);
   };
 
-  // 2. FUNÇÃO DE SALVAR (Onde a mágica acontece)
-  const handleCreateSession = () => {
-    // Validação simples
+  const handleConfirm = () => {
     if (!gameInput || !title || !dateTime) {
-        alert("Por favor, preencha todos os campos!");
+        alert("Preencha os campos obrigatórios!");
         return;
     }
 
-    // Cria o objeto final com os dados
-    const novaSessao = {
+    onSave({
         jogo: gameInput,
         titulo: title,
         data: dateTime,
         maxJogadores: players,
-        participantes: ["Host(Você)"]
-    };
-
-    onSave(novaSessao);
-    
-    // Aqui depois vamos colocar a lógica para salvar no banco ou na lista
-    
-    onClose(); // Fecha o modal
-    
-    // Limpar o formulário (opcional)
-    setGameInput('');
-    setTitle('');
-    setDateTime('');
-    setPlayers('5');
+        descricao: description
+    });
   };
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         
-        <h2 className={styles.title}>Nova Sessão</h2>
+        <h2 className={styles.title}>
+            {initialData ? "Editar Sessão" : "Nova Sessão"}
+        </h2>
 
         <form>
-          {/* CAMPO JOGO */}
+          {/* JOGO */}
           <div className={styles.formGroup}>
             <label className={styles.label}>Qual jogo será jogado?</label>
             <input 
@@ -89,7 +90,6 @@ function CreateSessionModal({ isOpen, onClose, onSave }) {
               onChange={handleGameChange}
               onFocus={() => setShowSuggestions(true)}
             />
-            
             {showSuggestions && gameInput && (
               <ul className={styles.suggestionsList}>
                 {filteredGames.map((game, index) => (
@@ -101,20 +101,19 @@ function CreateSessionModal({ isOpen, onClose, onSave }) {
             )}
           </div>
 
-          {/* CAMPO TÍTULO - Agora com State */}
+          {/* TÍTULO */}
           <div className={styles.formGroup}>
             <label className={styles.label}>Título da Sessão</label>
             <input 
                 type="text" 
-                placeholder="Ex: Ranked Duo Prata" 
                 className={styles.input}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)} 
             />
           </div>
 
+          {/* DATA E JOGADORES */}
           <div className={styles.row}>
-            {/* CAMPO DATA - Agora com State e MinDate */}
             <div className={styles.formGroup}>
                 <label className={styles.label}>Data e Horário</label>
                 <input 
@@ -126,9 +125,8 @@ function CreateSessionModal({ isOpen, onClose, onSave }) {
                 />
             </div>
 
-            {/* CAMPO JOGADORES - Agora com State */}
             <div className={styles.formGroup}>
-                <label className={styles.label}>Numero total deJogadores</label>
+                <label className={styles.label}>Máx. Jogadores</label>
                 <input 
                     type="number" 
                     min="2" 
@@ -140,21 +138,26 @@ function CreateSessionModal({ isOpen, onClose, onSave }) {
             </div>
           </div>
 
+          {/* DESCRIÇÃO */}
+          <div className={styles.formGroup}>
+              <label className={styles.label}>Descrição / Regras</label>
+              <textarea 
+                  className={styles.input}
+                  style={{height: 100, resize: 'none', paddingTop: 10}}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+              />
+          </div>
+
           <div className={styles.actions}>
             <button type="button" className={styles.btnCancel} onClick={onClose}>
               Cancelar
             </button>
-            {/* Botão agora chama a função handleCreateSession */}
-            <button 
-                type="button" 
-                className={styles.btnConfirm}
-                onClick={handleCreateSession}
-            >
-              Criar Sessão
+            <button type="button" className={styles.btnConfirm} onClick={handleConfirm}>
+              {initialData ? "Salvar Alterações" : "Criar Sessão"}
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );

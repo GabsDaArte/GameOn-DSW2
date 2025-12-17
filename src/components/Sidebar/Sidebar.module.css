@@ -5,14 +5,13 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 73px); /* Ajuste fino baseado na altura real da navbar */
+  height: calc(100vh - 73px);
   position: sticky;
   top: 73px;
   transition: margin-left 0.3s ease, transform 0.3s ease;
-  flex-shrink: 0; /* Impede a sidebar de ser esmagada */
+  flex-shrink: 0;
 }
 
-/* Estado Fechado (Desktop) */
 .sidebarClosed {
   margin-left: -280px;
 }
@@ -28,11 +27,20 @@
 .sessionList {
   flex: 1;
   overflow-y: auto;
-  padding-right: 5px; /* Espaço para scrollbar não colar */
+  padding-right: 5px;
 }
 
 /* Cards */
-.sessionCard { margin-bottom: 1.5rem; }
+.sessionCard {
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  height: 160px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+  border: 1px solid transparent;
+}
 
 .time {
   font-size: 0.9rem;
@@ -58,8 +66,8 @@
   margin-bottom: 1.5rem;
   border-radius: 12px;
   overflow: hidden;
-  position: relative; /* Para o background absolute */
-  height: 140px;      /* Altura fixa para o card ficar bonito */
+  position: relative;
+  height: 140px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
   transition: transform 0.2s;
 }
@@ -74,18 +82,19 @@
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.4); /* Escurece a imagem */
+  filter: brightness(0.4);
 }
 
-/* Conteúdo (Texto) */
+/* Conteúdo */
 .cardOverlay {
   position: relative;
   z-index: 1;
-  padding: 12px;
+  padding: 16px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .cardHeader {
@@ -116,12 +125,13 @@
   color: #ccc;
 }
 
-/* BOLINHAS SOBREPOSTAS (Stack) */
+/* Avatars */
 .avatarStack {
     display: flex;
     align-items: center;
-    margin-top: 8px;
-    padding-left: 10px; /* Espaço para o primeiro não cortar */
+    margin-top: auto;
+    padding-left: 8px;
+    padding-bottom: 2px;
 }
 
 .stackAvatar {
@@ -130,7 +140,7 @@
     border-radius: 50%;
     border: 2px solid #1e1e1e;
     object-fit: cover;
-    margin-left: -10px; /* O segredo da sobreposição */
+    margin-left: -10px;
     background: #333;
 }
 
@@ -166,7 +176,37 @@
 
 .createButton:hover { opacity: 0.9; }
 
-/* --- RESPONSIVIDADE MOBILE --- */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-secondary);
+  border: 1px dashed #333;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 20px;
+}
+
+.emptyState p {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState span {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState small {
+  font-size: 0.8rem;
+  color: #888;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -178,7 +218,7 @@
   }
 
   .sidebarClosed {
-    margin-left: 0; /* Reseta margem */
-    transform: translateX(-100%); /* Esconde deslizando para fora */
+    margin-left: 0;
+    transform: translateX(-100%);
   }
 }

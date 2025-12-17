@@ -38,7 +38,7 @@
 
 .formGroup {
   margin-bottom: 1.2rem;
-  position: relative; /* Importante para a lista flutuante se alinhar aqui */
+  position: relative;
 }
 
 .label {
@@ -68,10 +68,10 @@
   border-color: #8A2BE2;
 }
 
-/* --- NOVO: Lista de Sugestões (Autocomplete) --- */
+/* Lista de Sugestões */
 .suggestionsList {
   position: absolute;
-  top: 100%; /* Cola logo abaixo do input */
+  top: 100%;
   left: 0;
   right: 0;
   background-color: #2a2a2a;
@@ -103,14 +103,13 @@
   color: white;
 }
 
-/* --- Row para Horário e Jogadores ficarem lado a lado --- */
 .row {
   display: flex;
   gap: 1rem;
 }
 
 .row .formGroup {
-  flex: 1; /* Ocupam o mesmo tamanho */
+  flex: 1;
 }
 
 .actions {

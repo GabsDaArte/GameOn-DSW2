@@ -1,46 +1,92 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './Sidebar.module.css';
+import { getGameImage } from '../../utils/gameImages'; 
 
-function Navbar({ onOpenMenu }) {
+function Sidebar({ isOpen, onOpenModal, sessions, currentUser }) {
+  const navigate = useNavigate();
+  const sidebarClasses = isOpen ? styles.sidebar : `${styles.sidebar} ${styles.sidebarClosed}`;
+
+  const myName = currentUser || "Você";
+
+  const formatTime = (dateString) => {
+    if(!dateString) return "--:--";
+    return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const mySessions = sessions.filter(session => {
+      const parts = session.participantes || [];
+      return parts.includes(myName);
+  });
+
+  mySessions.sort((a, b) => new Date(a.data) - new Date(b.data));
+
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.leftSection}>
-        <button className={styles.hamburger} onClick={onOpenMenu}>
-          {/* ... SVG hamburguer ... */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
-
-        <div className={styles.logoContainer}>
-          <Link to="/" className={styles.logoText}>GameOn</Link>
-        </div>
-      </div>
-
-      {/* SEARCHBAR COM ICONE E GRADIENTE */}
-      <div className={styles.searchWrapper}>
-        <div className={styles.searchInner}>
-           {/* Ícone de Lupa */}
-           <svg className={styles.searchIcon} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-           
-           <input 
-             type="text" 
-             placeholder="Buscar sessão..." 
-             className={styles.searchInput}
-           />
-        </div>
-      </div>
-
-      <div className={styles.profileContainer}>
-        {/* BOTÃO RESET (Pode remover depois) */}
-        <button onClick={() => { localStorage.clear(); window.location.reload(); }} style={{marginRight: 10, background: 'red', border: 'none', color: 'white', borderRadius: 4, cursor: 'pointer'}}>RESET</button>
-        
-        {/* AVATAR COM BORDA GRADIENTE */}
-        <div className={styles.avatarContainer}>
-            <div className={styles.avatar}>
-               <img src="https://github.com/shadcn.png" alt="Perfil" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+    <aside className={sidebarClasses}>
+      <div className={styles.header}><h3>Minhas Sessões</h3></div>
+      
+      <div className={styles.sessionList}>
+        {mySessions.length === 0 ? (
+            <div className={styles.emptyState}>
+                <p>🚫</p>
+                <span>Você não está em nenhuma sessão.</span>
+                <small>Entre em uma ou crie a sua!</small>
             </div>
-        </div>
+        ) : (
+            mySessions.map((session) => {
+                const participantes = session.participantes || [];
+                const isHost = participantes[0] === myName;
+                const maxVisible = 4;
+                const extraCount = participantes.length - maxVisible;
+                const visibleParticipants = participantes.slice(0, maxVisible);
+
+                return (
+                    <div 
+                        className={styles.sessionCard} 
+                        key={session.id}
+                        onClick={() => navigate(`/session/${session.id}`)}
+                        style={{ 
+                            border: isHost ? '1px solid #FFD700' : '1px solid #8A2BE2',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <div 
+                            className={styles.cardBackground}
+                            style={{ backgroundImage: `url(${getGameImage(session.jogo)})` }}
+                        ></div>
+                        
+                        <div className={styles.cardOverlay}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.timeBadge}>{formatTime(session.data)}</div>
+                                {isHost && <span style={{color: '#FFD700', fontSize: '0.8rem'}}>👑 Host</span>}
+                            </div>
+
+                            <div className={styles.cardInfo}>
+                                <strong>{session.titulo}</strong>
+                                <span className={styles.gameName}>{session.jogo}</span>
+                            </div>
+                            
+                            <div className={styles.avatarStack}>
+                                {visibleParticipants.map((nome, idx) => (
+                                    <img 
+                                        key={idx}
+                                        src={nome.includes("(Você)") ? "https://github.com/shadcn.png" : `https://api.dicebear.com/7.x/avataaars/svg?seed=${nome}`}
+                                        className={styles.stackAvatar}
+                                        title={nome}
+                                        style={{ zIndex: 10 - idx }}
+                                    />
+                                ))}
+                                {participantes.length > maxVisible && (
+                                    <div className={styles.stackCounter} style={{ zIndex: 5 }}>+{extraCount}</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            })
+        )}
+        <button className={styles.createButton} onClick={onOpenModal}>+ Criar Sessão</button>
       </div>
-    </nav>
+    </aside>
   );
 }
-export default Navbar;
+export default Sidebar;

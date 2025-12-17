@@ -18,7 +18,7 @@
 }
 
 .hamburger {
-  display: block; /* Sempre visível */
+  display: block;
   background: none;
   border: none;
   color: white;
@@ -77,20 +77,50 @@
 }
 
 .searchWrapper {
+  position: relative;
   flex: 1;
   max-width: 500px;
   margin: 0 2rem;
-  /* Cria a borda gradiente usando padding e background duplo */
   background: var(--primary-gradient);
-  padding: 2px; /* Espessura da borda */
+  padding: 2px;
   border-radius: 20px;
   display: flex;
+}
+
+.suggestionsDropdown {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    right: 20px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 0 0 12px 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 50;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestionsDropdown li {
+    padding: 10px 15px;
+    color: #ccc;
+    cursor: pointer;
+    border-bottom: 1px solid #2a2a2a;
+    transition: background 0.2s;
+}
+
+.suggestionsDropdown li:hover {
+    background-color: #8A2BE2;
+    color: white;
 }
 
 .searchInner {
   background-color: #000;
   width: 100%;
-  border-radius: 18px; /* Um pouco menos que o pai */
+  border-radius: 18px;
   display: flex;
   align-items: center;
   padding: 0 1rem;
@@ -110,13 +140,11 @@
   outline: none;
 }
 
-/* NOVO AVATAR COM BORDA GRADIENTE */
 .avatarContainer {
-  /* Gradiente na borda */
   background: var(--primary-gradient);
-  padding: 2px; /* Espessura da borda */
+  padding: 2px;
   border-radius: 50%;
-  width: 44px; /* Ajuste o tamanho total */
+  width: 44px;
   height: 44px;
   display: flex;
   justify-content: center;
@@ -129,7 +157,7 @@
   height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #000; /* Fundo caso a imagem falhe */
+  background-color: #000;
 }
 
 @media (max-width: 600px) {
